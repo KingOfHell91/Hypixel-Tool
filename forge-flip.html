@@ -12,27 +12,51 @@
         <h1 class="text-2xl font-bold">Forge Flip Rechner</h1>
         <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
     </header>
-    
+
     <main class="p-4 text-center">
         <h2 class="text-xl font-semibold">Berechne den Profit beim Schmieden</h2>
-        <label for="itemName" class="block text-lg">Item-Name:</label>
-        <input type="text" id="itemName" class="mt-2 p-2 text-black rounded">
 
-        <label for="materials" class="block mt-4 text-lg">Benötigte Materialien (JSON-Format):</label>
-        <textarea id="materials" class="mt-2 p-2 text-black rounded w-80 h-20"></textarea>
+        <!-- Modus-Auswahl -->
+        <label class="block text-lg">Modus:</label>
+        <select id="mode" class="mt-2 p-2 text-black rounded" onchange="toggleMode()">
+            <option value="manual">Manuelle Eingabe</option>
+            <option value="auto">Automatische Berechnung</option>
+        </select>
 
-        <button onclick="calculateForgeFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+        <!-- Manuelle Eingabe -->
+        <div id="manualMode">
+            <label for="itemName" class="block text-lg">Item-Name:</label>
+            <input type="text" id="itemName" class="mt-2 p-2 text-black rounded">
+
+            <label for="materials" class="block mt-4 text-lg">Benötigte Materialien (JSON-Format):</label>
+            <textarea id="materials" class="mt-2 p-2 text-black rounded w-80 h-20"></textarea>
+
+            <button onclick="calculateForgeFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+        </div>
+
+        <!-- Automatische Berechnung -->
+        <div id="autoMode" style="display: none;">
+            <p class="mt-4 text-lg">Die besten Forge Flips werden berechnet...</p>
+            <button onclick="calculateBestForgeFlips()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Beste Flips berechnen</button>
+            <div id="bestFlips" class="mt-4 text-lg"></div>
+        </div>
 
         <h3 class="mt-4 text-lg">Ergebnis:</h3>
         <p id="result" class="text-xl text-green-400 mt-2"></p>
     </main>
-    
+
     <footer class="bg-gray-800 p-4 text-center mt-8">
         <p>© 2025 Hypixel Skyblock Tool</p>
     </footer>
 
     <script type="module">
-        import { calculateForgeFlip } from "./forgeFlipCalculator.js";
+        import { calculateForgeFlip, findBestForgeFlips } from "./forgeFlipCalculator.js";
+
+        function toggleMode() {
+            const mode = document.getElementById("mode").value;
+            document.getElementById("manualMode").style.display = mode === "manual" ? "block" : "none";
+            document.getElementById("autoMode").style.display = mode === "auto" ? "block" : "none";
+        }
 
         async function calculateForgeFlipUI() {
             const itemName = document.getElementById("itemName").value;
@@ -47,6 +71,11 @@
 
             const result = await calculateForgeFlip(itemName, materials);
             document.getElementById("result").innerText = `Profit: ${result.toLocaleString()} Coins`;
+        }
+
+        async function calculateBestForgeFlips() {
+            const bestFlips = await findBestForgeFlips();
+            document.getElementById("bestFlips").innerHTML = bestFlips.map(flip => `<p>${flip.item}: ${flip.profit.toLocaleString()} Coins</p>`).join("");
         }
     </script>
 </body>
