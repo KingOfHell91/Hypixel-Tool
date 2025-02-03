@@ -1,27 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hypixel Skyblock Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 200px;
+            background-color: #2d3748;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .menu a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #4a5568;
+        }
+        .menu a:hover {
+            background-color: #4a5568;
+        }
+        .menu-toggle {
+            cursor: pointer;
+        }
+        .menu.show {
+            display: block;
+        }
+    </style>
     <script type="module" src="katFlipCalculator.js"></script>
     <script type="module" src="forgeFlipCalculator.js"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
     <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center relative">
         <h1 class="text-2xl font-bold">Hypixel Skyblock Tool</h1>
-        <button class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg menu-toggle">☰ Menu</button>
+        <button class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg menu-toggle">☰ Menü</button>
     </header>
     
     <nav class="menu" id="menu">
-        <a href="kat-flip.html">Kat Flip Calculator</a>
-        <a href="forge-flip.html">Forge Flip Calculator</a>
+        <a href="kat-flip.html">Kat Flip Rechner</a>
+        <a href="bazaar-flip.html">Bazaar Flipping Rechner</a>
+        <a href="forge-flip.html">Forge Flip Rechner</a>
     </nav>
     
     <main class="p-4 text-center">
-        <h2 class="text-xl font-semibold">Welcome to the Hypixel Skyblock Tool</h2>
-        <p>Select a tool from the menu above to get started.</p>
+        <h2 class="text-xl font-semibold">Willkommen beim Hypixel Skyblock Tool</h2>
+        <p>Wähle ein Tool aus dem obigen Menü, um zu beginnen.</p>
     </main>
     
     <footer class="bg-gray-800 p-4 text-center mt-8">
