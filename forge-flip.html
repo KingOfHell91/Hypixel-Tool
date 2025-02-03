@@ -1,0 +1,16 @@
+// forgeFlipCalculator.js - Berechnet den Forge Flip Profit
+import { fetchBazaarData } from "./fetchBazaarData.js";
+export async function calculateForgeFlip(itemName, requiredMaterials) {
+    const bazaarData = await fetchBazaarData();
+    let totalCost = 0;
+    
+    for (const material of requiredMaterials) {
+        if (bazaarData[material.name]) {
+            totalCost += material.quantity * bazaarData[material.name].quick_status.sellPrice;
+        } else {
+            totalCost += material.quantity * material.defaultPrice; // Falls nicht im Bazaar, Standardpreis
+        }
+    }
+    
+    return totalCost;
+}
