@@ -12,38 +12,61 @@
         <h1 class="text-2xl font-bold">Kat Flip Rechner</h1>
         <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
     </header>
-    
+
     <main class="p-4 text-center">
         <h2 class="text-xl font-semibold">Berechne den Profit beim Pet-Upgrade</h2>
-        
-        <label for="petName" class="block text-lg">Pet-Name:</label>
-        <input type="text" id="petName" class="mt-2 p-2 text-black rounded">
 
-        <label for="rarity" class="block mt-4 text-lg">Ziel-Seltenheit:</label>
-        <select id="rarity" class="mt-2 p-2 text-black rounded">
-            <option value="Rare">Rare</option>
-            <option value="Epic">Epic</option>
-            <option value="Legendary">Legendary</option>
+        <!-- Modus-Auswahl -->
+        <label class="block text-lg">Modus:</label>
+        <select id="mode" class="mt-2 p-2 text-black rounded" onchange="toggleMode()">
+            <option value="manual">Manuelle Eingabe</option>
+            <option value="auto">Automatische Berechnung</option>
         </select>
 
-        <label for="upgradeCost" class="block mt-4 text-lg">Upgrade-Kosten (Coins):</label>
-        <input type="number" id="upgradeCost" class="mt-2 p-2 text-black rounded">
+        <!-- Manuelle Eingabe -->
+        <div id="manualMode">
+            <label for="petName" class="block text-lg">Pet-Name:</label>
+            <input type="text" id="petName" class="mt-2 p-2 text-black rounded">
 
-        <label for="xpRequired" class="block mt-4 text-lg">Benötigte XP:</label>
-        <input type="number" id="xpRequired" class="mt-2 p-2 text-black rounded">
+            <label for="rarity" class="block mt-4 text-lg">Ziel-Seltenheit:</label>
+            <select id="rarity" class="mt-2 p-2 text-black rounded">
+                <option value="Rare">Rare</option>
+                <option value="Epic">Epic</option>
+                <option value="Legendary">Legendary</option>
+            </select>
 
-        <button onclick="calculateKatFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+            <label for="upgradeCost" class="block mt-4 text-lg">Upgrade-Kosten (Coins):</label>
+            <input type="number" id="upgradeCost" class="mt-2 p-2 text-black rounded">
+
+            <label for="xpRequired" class="block mt-4 text-lg">Benötigte XP:</label>
+            <input type="number" id="xpRequired" class="mt-2 p-2 text-black rounded">
+
+            <button onclick="calculateKatFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+        </div>
+
+        <!-- Automatische Berechnung -->
+        <div id="autoMode" style="display: none;">
+            <p class="mt-4 text-lg">Die besten Kat Flips werden berechnet...</p>
+            <button onclick="calculateBestKatFlips()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Beste Flips berechnen</button>
+            <div id="bestFlips" class="mt-4 text-lg"></div>
+        </div>
 
         <h3 class="mt-4 text-lg">Ergebnis:</h3>
         <p id="result" class="text-xl text-green-400 mt-2"></p>
     </main>
-    
+
     <footer class="bg-gray-800 p-4 text-center mt-8">
         <p>© 2025 Hypixel Skyblock Tool</p>
     </footer>
 
     <script type="module">
-        import { calculateKatFlip } from "./katFlipCalculator.js";
+        import { calculateKatFlip, findBestKatFlips } from "./katFlipCalculator.js";
+
+        function toggleMode() {
+            const mode = document.getElementById("mode").value;
+            document.getElementById("manualMode").style.display = mode === "manual" ? "block" : "none";
+            document.getElementById("autoMode").style.display = mode === "auto" ? "block" : "none";
+        }
 
         async function calculateKatFlipUI() {
             const petName = document.getElementById("petName").value;
@@ -58,6 +81,11 @@
 
             const result = await calculateKatFlip(petName, rarity, upgradeCost, xpRequired);
             document.getElementById("result").innerText = `Profit: ${result.toLocaleString()} Coins`;
+        }
+
+        async function calculateBestKatFlips() {
+            const bestFlips = await findBestKatFlips();
+            document.getElementById("bestFlips").innerHTML = bestFlips.map(flip => `<p>${flip.pet}: ${flip.profit.toLocaleString()} Coins</p>`).join("");
         }
     </script>
 </body>
