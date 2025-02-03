@@ -34,8 +34,6 @@
             display: block;
         }
     </style>
-    <script type="module" src="katFlipCalculator.js"></script>
-    <script type="module" src="forgeFlipCalculator.js"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
     <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center relative">
@@ -63,7 +61,8 @@
             const menuToggle = document.querySelector(".menu-toggle");
             const menu = document.getElementById("menu");
             
-            menuToggle.addEventListener("click", function() {
+            menuToggle.addEventListener("click", function(event) {
+                event.stopPropagation();  // Verhindert das Schließen beim Klick auf den Button
                 menu.classList.toggle("show");
             });
 
