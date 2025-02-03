@@ -48,7 +48,7 @@
         <div id="autoMode" style="display: none;">
             <p class="mt-4 text-lg">Die besten Kat Flips werden berechnet...</p>
             <button onclick="calculateBestKatFlips()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Beste Flips berechnen</button>
-            <div id="bestFlips" class="mt-4 text-lg"></div>
+            <div id="bestFlips" class="mt-4 text-lg text-left"></div>
         </div>
 
         <h3 class="mt-4 text-lg">Ergebnis:</h3>
@@ -85,7 +85,16 @@
 
         async function calculateBestKatFlips() {
             const bestFlips = await findBestKatFlips();
-            document.getElementById("bestFlips").innerHTML = bestFlips.map(flip => `<p>${flip.pet}: ${flip.profit.toLocaleString()} Coins</p>`).join("");
+            if (bestFlips.length === 0) {
+                document.getElementById("bestFlips").innerHTML = "<p>Keine profitablen Flips gefunden.</p>";
+                return;
+            }
+
+            const flipList = bestFlips.map(flip => 
+                `<p><strong>${flip.pet}</strong>: Profit: <span class="text-green-400">${flip.profit.toLocaleString()} Coins</span></p>`
+            ).join("");
+
+            document.getElementById("bestFlips").innerHTML = flipList;
         }
     </script>
 </body>
