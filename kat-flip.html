@@ -1,25 +1,64 @@
-// fetchBazaarData.js - Ruft Bazaar-Daten ab
-export async function fetchBazaarData() {
-    const response = await fetch("https://api.hypixel.net/skyblock/bazaar");
-    const data = await response.json();
-    return data.products;
-}
-
-// fetchAuctionData.js - Ruft Auktionsdaten ab
-export async function fetchAuctionData() {
-    const response = await fetch("https://api.hypixel.net/skyblock/auctions");
-    const data = await response.json();
-    return data.auctions;
-}
-
-// katFlipCalculator.js - Berechnet den Kat Flip Profit
-import { fetchAuctionData } from "./fetchAuctionData.js";
-export async function calculateKatFlip(petName, rarity, upgradeCost, xpRequired) {
-    const auctions = await fetchAuctionData();
-    const upgradedPet = auctions.filter(a => a.item_name.includes(petName) && a.tier === rarity);
-    if (upgradedPet.length === 0) return "No data available";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kat Flip Rechner</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type="module" src="katFlipCalculator.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center relative">
+        <h1 class="text-2xl font-bold">Kat Flip Rechner</h1>
+        <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
+    </header>
     
-    const lowestPrice = Math.min(...upgradedPet.map(a => a.starting_bid));
-    const xpFactor = xpRequired / 1000000; // XP-Berechnung
-    return lowestPrice - (upgradeCost * xpFactor);
-}
+    <main class="p-4 text-center">
+        <h2 class="text-xl font-semibold">Berechne den Profit beim Pet-Upgrade</h2>
+        
+        <label for="petName" class="block text-lg">Pet-Name:</label>
+        <input type="text" id="petName" class="mt-2 p-2 text-black rounded">
+
+        <label for="rarity" class="block mt-4 text-lg">Ziel-Seltenheit:</label>
+        <select id="rarity" class="mt-2 p-2 text-black rounded">
+            <option value="Rare">Rare</option>
+            <option value="Epic">Epic</option>
+            <option value="Legendary">Legendary</option>
+        </select>
+
+        <label for="upgradeCost" class="block mt-4 text-lg">Upgrade-Kosten (Coins):</label>
+        <input type="number" id="upgradeCost" class="mt-2 p-2 text-black rounded">
+
+        <label for="xpRequired" class="block mt-4 text-lg">Benötigte XP:</label>
+        <input type="number" id="xpRequired" class="mt-2 p-2 text-black rounded">
+
+        <button onclick="calculateKatFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+
+        <h3 class="mt-4 text-lg">Ergebnis:</h3>
+        <p id="result" class="text-xl text-green-400 mt-2"></p>
+    </main>
+    
+    <footer class="bg-gray-800 p-4 text-center mt-8">
+        <p>© 2025 Hypixel Skyblock Tool</p>
+    </footer>
+
+    <script type="module">
+        import { calculateKatFlip } from "./katFlipCalculator.js";
+
+        async function calculateKatFlipUI() {
+            const petName = document.getElementById("petName").value;
+            const rarity = document.getElementById("rarity").value;
+            const upgradeCost = Number(document.getElementById("upgradeCost").value);
+            const xpRequired = Number(document.getElementById("xpRequired").value);
+
+            if (!petName || !rarity || isNaN(upgradeCost) || isNaN(xpRequired)) {
+                document.getElementById("result").innerText = "Bitte alle Felder ausfüllen!";
+                return;
+            }
+
+            const result = await calculateKatFlip(petName, rarity, upgradeCost, xpRequired);
+            document.getElementById("result").innerText = `Profit: ${result.toLocaleString()} Coins`;
+        }
+    </script>
+</body>
+</html>
