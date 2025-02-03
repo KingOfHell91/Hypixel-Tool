@@ -1,16 +1,53 @@
-import { fetchBazaarData } from "./fetchBazaarData.js";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge Flip Rechner</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type="module" src="forgeFlipCalculator.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center relative">
+        <h1 class="text-2xl font-bold">Forge Flip Rechner</h1>
+        <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
+    </header>
+    
+    <main class="p-4 text-center">
+        <h2 class="text-xl font-semibold">Berechne den Profit beim Schmieden</h2>
+        <label for="itemName" class="block text-lg">Item-Name:</label>
+        <input type="text" id="itemName" class="mt-2 p-2 text-black rounded">
 
-export async function calculateForgeFlip(itemName, requiredMaterials) {
-    const bazaarData = await fetchBazaarData();
-    let totalCost = 0;
+        <label for="materials" class="block mt-4 text-lg">Benötigte Materialien (JSON-Format):</label>
+        <textarea id="materials" class="mt-2 p-2 text-black rounded w-80 h-20"></textarea>
 
-    for (const material of requiredMaterials) {
-        if (bazaarData[material.name]) {
-            totalCost += material.quantity * bazaarData[material.name].quick_status.sellPrice;
-        } else {
-            totalCost += material.quantity * material.defaultPrice; // Falls nicht im Bazaar, Standardpreis
+        <button onclick="calculateForgeFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
+
+        <h3 class="mt-4 text-lg">Ergebnis:</h3>
+        <p id="result" class="text-xl text-green-400 mt-2"></p>
+    </main>
+    
+    <footer class="bg-gray-800 p-4 text-center mt-8">
+        <p>© 2025 Hypixel Skyblock Tool</p>
+    </footer>
+
+    <script type="module">
+        import { calculateForgeFlip } from "./forgeFlipCalculator.js";
+
+        async function calculateForgeFlipUI() {
+            const itemName = document.getElementById("itemName").value;
+            let materials;
+
+            try {
+                materials = JSON.parse(document.getElementById("materials").value);
+            } catch (error) {
+                document.getElementById("result").innerText = "Fehler: Ungültiges JSON-Format für Materialien.";
+                return;
+            }
+
+            const result = await calculateForgeFlip(itemName, materials);
+            document.getElementById("result").innerText = `Profit: ${result.toLocaleString()} Coins`;
         }
-    }
-
-    return totalCost;
-}
+    </script>
+</body>
+</html>
