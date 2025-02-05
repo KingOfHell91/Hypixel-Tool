@@ -3,35 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beste Forge Flips – Hypixel Skyblock Tool</title>
-  <!-- Tailwind CSS für schnelles Styling -->
+  <title>Forge Flip Rechner – Hypixel Skyblock Tool</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center">
-    <h1 class="text-2xl font-bold">Beste Forge Flips</h1>
-    <nav>
-      <a href="index.html" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Startseite</a>
-    </nav>
+    <h1 class="text-2xl font-bold">Forge Flip Rechner</h1>
+    <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
   </header>
-
-  <main class="p-4">
-    <section id="forgeFlipSection">
-      <h2 class="text-xl font-semibold mb-2">Profitberechnung für Forge Flips</h2>
-      <button id="forgeFlipButton" class="p-2 bg-green-600 hover:bg-green-700 rounded-lg">Forge Flips berechnen</button>
-      <div id="forgeFlipResults" class="mt-4"></div>
-    </section>
+  
+  <main class="p-4 text-center">
+    <h2 class="text-xl font-semibold">Automatische Berechnung der profitabelsten Forge Flips</h2>
+    <button id="calculateForgeFlips" class="mt-4 p-2 bg-green-600 hover:bg-green-700 rounded-lg">Forge Flips berechnen</button>
+    <div id="forgeFlipResults" class="mt-4"></div>
   </main>
-
+  
   <footer class="bg-gray-800 p-4 text-center mt-8">
     <p>© 2025 Hypixel Skyblock Tool</p>
   </footer>
-
+  
   <!-- JavaScript: Import der Funktion aus forgeFlipCalculator.js -->
   <script type="module">
     import { findBestForgeFlips } from "./forgeFlipCalculator.js";
     
-    document.getElementById('forgeFlipButton').addEventListener('click', async () => {
+    document.getElementById('calculateForgeFlips').addEventListener('click', async () => {
       const resultsDiv = document.getElementById('forgeFlipResults');
       resultsDiv.innerHTML = '<p>Lade Forge Flip Daten...</p>';
       try {
