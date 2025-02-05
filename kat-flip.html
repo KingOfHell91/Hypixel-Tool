@@ -1,101 +1,58 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kat Flip Rechner</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script type="module" src="katFlipCalculator.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beste Kat Flips – Hypixel Skyblock Tool</title>
+  <!-- Tailwind CSS für schnelles Styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white font-sans">
-    <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center relative">
-        <h1 class="text-2xl font-bold">Kat Flip Rechner</h1>
-        <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
-    </header>
+  <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Beste Kat Flips</h1>
+    <nav>
+      <a href="index.html" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Startseite</a>
+    </nav>
+  </header>
 
-    <main class="p-4 text-center">
-        <h2 class="text-xl font-semibold">Berechne den Profit beim Pet-Upgrade</h2>
+  <main class="p-4">
+    <section id="katFlipSection">
+      <h2 class="text-xl font-semibold mb-2">Profitberechnung für Pet Upgrades</h2>
+      <button id="katFlipButton" class="p-2 bg-green-600 hover:bg-green-700 rounded-lg">Kat Flips berechnen</button>
+      <div id="katFlipResults" class="mt-4"></div>
+    </section>
+  </main>
 
-        <!-- Modus-Auswahl -->
-        <label class="block text-lg">Modus:</label>
-        <select id="mode" class="mt-2 p-2 text-black rounded" onchange="toggleMode()">
-            <option value="manual">Manuelle Eingabe</option>
-            <option value="auto">Automatische Berechnung</option>
-        </select>
+  <footer class="bg-gray-800 p-4 text-center mt-8">
+    <p>© 2025 Hypixel Skyblock Tool</p>
+  </footer>
 
-        <!-- Manuelle Eingabe -->
-        <div id="manualMode">
-            <label for="petName" class="block text-lg">Pet-Name:</label>
-            <input type="text" id="petName" class="mt-2 p-2 text-black rounded">
-
-            <label for="rarity" class="block mt-4 text-lg">Ziel-Seltenheit:</label>
-            <select id="rarity" class="mt-2 p-2 text-black rounded">
-                <option value="Rare">Rare</option>
-                <option value="Epic">Epic</option>
-                <option value="Legendary">Legendary</option>
-            </select>
-
-            <label for="upgradeCost" class="block mt-4 text-lg">Upgrade-Kosten (Coins):</label>
-            <input type="number" id="upgradeCost" class="mt-2 p-2 text-black rounded">
-
-            <label for="xpRequired" class="block mt-4 text-lg">Benötigte XP:</label>
-            <input type="number" id="xpRequired" class="mt-2 p-2 text-black rounded">
-
-            <button onclick="calculateKatFlipUI()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Berechnen</button>
-        </div>
-
-        <!-- Automatische Berechnung -->
-        <div id="autoMode" style="display: none;">
-            <p class="mt-4 text-lg">Die besten Kat Flips werden berechnet...</p>
-            <button onclick="calculateBestKatFlips()" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Beste Flips berechnen</button>
-            <div id="bestFlips" class="mt-4 text-lg text-left"></div>
-        </div>
-
-        <h3 class="mt-4 text-lg">Ergebnis:</h3>
-        <p id="result" class="text-xl text-green-400 mt-2"></p>
-    </main>
-
-    <footer class="bg-gray-800 p-4 text-center mt-8">
-        <p>© 2025 Hypixel Skyblock Tool</p>
-    </footer>
-
-    <script type="module">
-        import { calculateKatFlip, findBestKatFlips } from "./katFlipCalculator.js";
-
-        function toggleMode() {
-            const mode = document.getElementById("mode").value;
-            document.getElementById("manualMode").style.display = mode === "manual" ? "block" : "none";
-            document.getElementById("autoMode").style.display = mode === "auto" ? "block" : "none";
+  <!-- JavaScript: Import der Funktion aus katFlipCalculator.js -->
+  <script type="module">
+    import { findBestKatFlips } from "./katFlipCalculator.js";
+    
+    document.getElementById('katFlipButton').addEventListener('click', async () => {
+      const resultsDiv = document.getElementById('katFlipResults');
+      resultsDiv.innerHTML = '<p>Lade Kat Flip Daten...</p>';
+      try {
+        const flips = await findBestKatFlips();
+        if (flips.length === 0) {
+          resultsDiv.innerHTML = '<p>Keine profitablen Kat Flips gefunden.</p>';
+        } else {
+          const html = flips.map(flip => `
+            <p>
+              <strong>${flip.pet}</strong> (Seltenheit: ${flip.rarity}) – 
+              Marktpreis: ${flip.marketPrice.toLocaleString()} Coins, 
+              Upgrade-Kosten: ${flip.upgradeCost.toLocaleString()} Coins, 
+              Profit: <span class="text-green-400">${flip.profit.toLocaleString()} Coins</span>
+            </p>
+          `).join('');
+          resultsDiv.innerHTML = html;
         }
-
-        async function calculateKatFlipUI() {
-            const petName = document.getElementById("petName").value;
-            const rarity = document.getElementById("rarity").value;
-            const upgradeCost = Number(document.getElementById("upgradeCost").value);
-            const xpRequired = Number(document.getElementById("xpRequired").value);
-
-            if (!petName || !rarity || isNaN(upgradeCost) || isNaN(xpRequired)) {
-                document.getElementById("result").innerText = "Bitte alle Felder ausfüllen!";
-                return;
-            }
-
-            const result = await calculateKatFlip(petName, rarity, upgradeCost, xpRequired);
-            document.getElementById("result").innerText = `Profit: ${result.toLocaleString()} Coins`;
-        }
-
-        async function calculateBestKatFlips() {
-            const bestFlips = await findBestKatFlips();
-            if (bestFlips.length === 0) {
-                document.getElementById("bestFlips").innerHTML = "<p>Keine profitablen Flips gefunden.</p>";
-                return;
-            }
-
-            const flipList = bestFlips.map(flip => 
-                `<p><strong>${flip.pet}</strong>: Profit: <span class="text-green-400">${flip.profit.toLocaleString()} Coins</span></p>`
-            ).join("");
-
-            document.getElementById("bestFlips").innerHTML = flipList;
-        }
-    </script>
+      } catch (error) {
+        resultsDiv.innerHTML = `<p>Fehler: ${error.message}</p>`;
+      }
+    });
+  </script>
 </body>
 </html>
