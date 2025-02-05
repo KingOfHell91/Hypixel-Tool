@@ -3,35 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beste Kat Flips – Hypixel Skyblock Tool</title>
-  <!-- Tailwind CSS für schnelles Styling -->
+  <title>Kat Flip Rechner – Hypixel Skyblock Tool</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <header class="bg-gray-800 p-4 shadow-lg flex justify-between items-center">
-    <h1 class="text-2xl font-bold">Beste Kat Flips</h1>
-    <nav>
-      <a href="index.html" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Startseite</a>
-    </nav>
+    <h1 class="text-2xl font-bold">Kat Flip Rechner</h1>
+    <button onclick="window.location.href='index.html'" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Zurück</button>
   </header>
-
-  <main class="p-4">
-    <section id="katFlipSection">
-      <h2 class="text-xl font-semibold mb-2">Profitberechnung für Pet Upgrades</h2>
-      <button id="katFlipButton" class="p-2 bg-green-600 hover:bg-green-700 rounded-lg">Kat Flips berechnen</button>
-      <div id="katFlipResults" class="mt-4"></div>
-    </section>
+  
+  <main class="p-4 text-center">
+    <h2 class="text-xl font-semibold">Automatische Berechnung der profitabelsten Kat Flips</h2>
+    <button id="calculateKatFlips" class="mt-4 p-2 bg-green-600 hover:bg-green-700 rounded-lg">Kat Flips berechnen</button>
+    <div id="katFlipResults" class="mt-4"></div>
   </main>
-
+  
   <footer class="bg-gray-800 p-4 text-center mt-8">
     <p>© 2025 Hypixel Skyblock Tool</p>
   </footer>
-
+  
   <!-- JavaScript: Import der Funktion aus katFlipCalculator.js -->
   <script type="module">
     import { findBestKatFlips } from "./katFlipCalculator.js";
     
-    document.getElementById('katFlipButton').addEventListener('click', async () => {
+    document.getElementById('calculateKatFlips').addEventListener('click', async () => {
       const resultsDiv = document.getElementById('katFlipResults');
       resultsDiv.innerHTML = '<p>Lade Kat Flip Daten...</p>';
       try {
